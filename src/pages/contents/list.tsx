@@ -5,8 +5,9 @@ import { DataTable } from "@/components/refine-ui/data-table/data-table";
 import { DataTableSorter } from "@/components/refine-ui/data-table/data-table-sorter";
 import { ListView, ListViewHeader } from "@/components/refine-ui/views/list-view";
 import { EditButton } from "@/components/refine-ui/buttons/edit";
+import { DeleteButton } from "@/components/refine-ui/buttons/delete";
 import { Badge } from "@/components/ui/badge";
-import { Edit } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 
 type Content = {
   contentId: string;
@@ -65,7 +66,7 @@ export default function ContentsListPage() {
       {
         id: "actions",
         header: "Actions",
-        size: 80,
+        size: 100,
         cell: ({ row }) => {
           const recordItemId = row.original.contentId;
           return (
@@ -73,6 +74,9 @@ export default function ContentsListPage() {
               <EditButton recordItemId={recordItemId} size="icon-sm" variant="secondary">
                 <Edit className="h-4 w-4" />
               </EditButton>
+              <DeleteButton recordItemId={recordItemId} size="icon-sm" variant="destructive">
+                <Trash2 className="h-4 w-4" />
+              </DeleteButton>
             </div>
           );
         },
