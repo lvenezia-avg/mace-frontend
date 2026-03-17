@@ -75,10 +75,20 @@ const provider = createDataProvider(API_URL, {
       _params: GetOneParams
     ): Promise<Record<string, any>> {
       const body = await response.json();
-      if (Array.isArray(body) && body.length === 0) {
+      const data = body?.data ?? body;
+
+      if (Array.isArray(data)) {
+        if (data.length === 0) {
+          throw new Error("Resource not found");
+        }
+        return data[0];
+      }
+
+      if (!data) {
         throw new Error("Resource not found");
       }
-      return body;
+
+      return data;
     },
   },
 
@@ -110,7 +120,7 @@ const provider = createDataProvider(API_URL, {
       _params: UpdateParams<any>
     ): Promise<Record<string, any>> {
       const body = await response.json();
-      return body;
+      return body?.data ?? body;
     },
   },
 

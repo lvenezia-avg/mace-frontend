@@ -1,3 +1,5 @@
+import { useDataProvider } from "@refinedev/core";
+import { useEffect, useState } from "react";
 import { useForm } from "@refinedev/react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -12,6 +14,7 @@ import { Button } from "@/components/ui/button";
 const formSchema = z.object({
   bundleName: z.string().min(1, "Name is required"),
   bundleDescription: z.string().optional(),
+  bundleContentsId: z.array(z.string()).optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -21,9 +24,23 @@ type Bundle = {
   bundleName: string;
   bundleDescription: string;
   bundleStatus: "ACTIVE" | "INACTIVE";
+  bundleContentsId?: string[];
 };
 
 export default function BundlesCreatePage() {
+  const dataProvider = useDataProvider();
+  const [contentsOptions, setContentsOptions] = useState<{ contentId: string; contentName: string }[]>([]);
+
+  useEffect(() => {
+    dataProvider()
+      .getList({ resource: "contents", pagination: { pageSize: 100 } })
+      .then(({ data }) => {
+        const contents = data as { contentId: string; contentName: string; contentStatus?: string }[];
+        setContentsOptions(contents.filter((content) => content.contentStatus === "ACTIVE"));
+      })
+      .catch(() => setContentsOptions([]));
+  }, [dataProvider]);
+
   const {
     refineCore: { onFinish, formLoading },
     ...form
@@ -32,6 +49,7 @@ export default function BundlesCreatePage() {
     defaultValues: {
       bundleName: "",
       bundleDescription: "",
+      bundleContentsId: [],
     },
     refineCoreProps: {
       resource: "bundles",
@@ -78,6 +96,44 @@ export default function BundlesCreatePage() {
                   <FormMessage />
                 </FormItem>
               )}
+            />
+
+            <FormField
+              control={form.control}
+              name="bundleContentsId"
+              render={({ field }) => {
+                const selectedContents = field.value || [];
+                return (
+                  <FormItem>
+                    <FormLabel>Contents</FormLabel>
+                    <FormControl>
+                      <div className="grid gap-2">
+                        {contentsOptions.map((content) => {
+                          const isChecked = selectedContents.includes(content.contentId);
+                          return (
+                            <label key={content.contentId} className="flex items-center gap-2">
+                              <input
+                                type="checkbox"
+                                value={content.contentId}
+                                checked={isChecked}
+                                onChange={(event) => {
+                                  const next = event.target.checked
+                                    ? [...selectedContents, content.contentId]
+                                    : selectedContents.filter((id: string) => id !== content.contentId);
+                                  field.onChange(next);
+                                }}
+                                className="accent-primary"
+                              />
+                              <span>{content.contentName}</span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
             />
 
             <div className="flex gap-3">

@@ -11,14 +11,14 @@ export type Bundle = {
 export type CreateBundleDto = {
   bundleName: string;
   bundleDescription: string;
-  bundleContentsId?: string;
+  bundleContentsId?: string[];
 };
 
 export type UpdateBundleDto = {
   bundleId: string;
   bundleName?: string;
   bundleDescription?: string;
-  bundleContentsId?: string;
+  bundleContentsId?: string[];
 };
 
 export type GetBundlesResponse = {
