@@ -1,42 +1,75 @@
-import { GitHubBanner, Refine, WelcomePage } from "@refinedev/core";
-import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
-import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
+import { Refine } from "@refinedev/core";
 
-import routerProvider, {
-  DocumentTitleHandler,
-  UnsavedChangesNotifier,
-} from "@refinedev/react-router";
-import { BrowserRouter, Route, Routes } from "react-router";
-import "./App.css";
-import { dataProvider } from "./providers/data";
+import routerProvider, { NavigateToResource, UnsavedChangesNotifier } from "@refinedev/react-router";
 
-function App() {
+import { BrowserRouter, Routes, Route, Outlet } from "react-router";
+
+import { RefineAiErrorComponent } from "@/components/catch-all";
+
+import { useNotificationProvider } from "@/components/refine-ui/notification/use-notification-provider";
+
+import { Toaster } from "@/components/refine-ui/notification/toaster";
+
+import { Layout } from "@/components/refine-ui/layout/layout";
+
+import { dataProvider } from "@/providers/data";
+
+import ContentsListPage from "@/pages/contents/list";
+import ContentsCreatePage from "@/pages/contents/create";
+import ContentsEditPage from "@/pages/contents/edit";
+import BundlesListPage from "@/pages/bundles/list";
+import BundlesCreatePage from "@/pages/bundles/create";
+import BundlesEditPage from "@/pages/bundles/edit";
+
+const App = () => {
   return (
     <BrowserRouter>
-      <GitHubBanner />
-      <RefineKbarProvider>
-        <DevtoolsProvider>
-          <Refine
-            dataProvider={dataProvider}
-            routerProvider={routerProvider}
-            options={{
-              syncWithLocation: true,
-              warnWhenUnsavedChanges: true,
-              projectId: "vRnSJd-rNP792-2zsNHk",
-            }}
-          >
-            <Routes>
-              <Route index element={<WelcomePage />} />
-            </Routes>
-            <RefineKbar />
-            <UnsavedChangesNotifier />
-            <DocumentTitleHandler />
-          </Refine>
-          <DevtoolsPanel />
-        </DevtoolsProvider>
-      </RefineKbarProvider>
+      <Refine
+        routerProvider={routerProvider}
+        dataProvider={dataProvider}
+        notificationProvider={useNotificationProvider}
+        resources={[
+          {
+            name: "contents",
+            list: "/contents",
+            create: "/contents/create",
+            edit: "/contents/edit/:id",
+            meta: {
+              label: "Contents",
+            },
+          },
+          {
+            name: "bundles",
+            list: "/bundles",
+            create: "/bundles/create",
+            edit: "/bundles/edit/:id",
+            meta: {
+              label: "Bundles",
+            },
+          },
+        ]}>
+        <Routes>
+          <Route
+            element={
+              <Layout>
+                <Outlet />
+              </Layout>
+            }>
+            <Route index element={<NavigateToResource resource="contents" />} />
+            <Route path="/contents" element={<ContentsListPage />} />
+            <Route path="/contents/create" element={<ContentsCreatePage />} />
+            <Route path="/contents/edit/:id" element={<ContentsEditPage />} />
+            <Route path="/bundles" element={<BundlesListPage />} />
+            <Route path="/bundles/create" element={<BundlesCreatePage />} />
+            <Route path="/bundles/edit/:id" element={<BundlesEditPage />} />
+            <Route path="*" element={<RefineAiErrorComponent />} />
+          </Route>
+        </Routes>
+        <Toaster />
+        <UnsavedChangesNotifier />
+      </Refine>
     </BrowserRouter>
   );
-}
+};
 
 export default App;
