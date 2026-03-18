@@ -4,7 +4,7 @@ import { Toaster as Sonner, type ToasterProps } from "sonner";
 import { useTheme } from "@/components/refine-ui/theme/theme-provider";
 
 export function Toaster({ ...props }: ToasterProps) {
-  const { theme = "system" } = useTheme();
+  const { theme = "light" } = useTheme();
 
   return (
     <Sonner
