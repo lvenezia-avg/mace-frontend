@@ -28,7 +28,19 @@ const App = () => {
         routerProvider={routerProvider}
         dataProvider={dataProvider}
         notificationProvider={useNotificationProvider}
-        resources={[
+        options={{
+          title: {
+            text: "",
+            icon: (
+              <img
+                src="/awg_logo.png"
+                alt="AWG Logo"
+                className="h-12 w-12 object-contain"
+              />
+            ),
+          },
+        }}
+        resources={[ 
           {
             name: "contents",
             list: "/contents",

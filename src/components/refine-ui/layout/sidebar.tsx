@@ -236,9 +236,9 @@ function SidebarHeader() {
           "flex",
           "flex-row",
           "h-full",
+          "w-full",
           "items-center",
-          "justify-start",
-          "gap-2",
+          "justify-center",
           "transition-discrete",
           "duration-200",
           "cursor-pointer",
@@ -248,21 +248,7 @@ function SidebarHeader() {
           },
         )}
       >
-        <div>{title.icon}</div>
-        <h2
-          className={cn(
-            "text-sm",
-            "font-bold",
-            "transition-opacity",
-            "duration-200",
-            {
-              "opacity-0": !open,
-              "opacity-100": open,
-            },
-          )}
-        >
-          {title.text}
-        </h2>
+        <div className="h-12 w-12">{title.icon}</div>
       </Link>
 
       <ShadcnSidebarTrigger

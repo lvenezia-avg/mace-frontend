@@ -9,11 +9,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun, Monitor, ChevronDown, Check } from "lucide-react";
+import { Moon, Sun, ChevronDown, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type ThemeOption = {
-  value: "light" | "dark" | "system";
+  value: "light" | "dark";
   label: string;
   icon: React.ReactNode;
 };
@@ -28,11 +28,6 @@ const themeOptions: ThemeOption[] = [
     value: "dark",
     label: "Dark",
     icon: <Moon className="h-4 w-4" />,
-  },
-  {
-    value: "system",
-    label: "System",
-    icon: <Monitor className="h-4 w-4" />,
   },
 ];
 
