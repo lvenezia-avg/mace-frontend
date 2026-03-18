@@ -38,7 +38,11 @@ const App = () => {
               <img
                 src="/awg_logo.png"
                 alt="AWG Logo"
-                className="h-12 w-12 object-contain"
+                className="h-16 w-16 object-contain"
+                style={{
+                  transform: "scale(1.6)",
+                  margin: "-8px",
+                }}
               />
             ),
           },

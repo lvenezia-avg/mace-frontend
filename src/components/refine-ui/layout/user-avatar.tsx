@@ -1,4 +1,5 @@
 import { useGetIdentity } from "@refinedev/core";
+import { UserIcon } from "lucide-react";
 import {
   Avatar,
   AvatarFallback,
@@ -28,7 +29,9 @@ export function UserAvatar() {
   return (
     <Avatar className={cn("h-10", "w-10")}>
       {avatar && <AvatarImage src={avatar} alt={fullName} />}
-      <AvatarFallback>{getInitials(fullName)}</AvatarFallback>
+      <AvatarFallback className={cn("flex", "items-center", "justify-center")}> 
+        <UserIcon className={cn("h-5", "w-5", "text-muted-foreground")} />
+      </AvatarFallback>
     </Avatar>
   );
 }
