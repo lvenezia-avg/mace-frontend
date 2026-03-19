@@ -64,7 +64,7 @@ const App = () => {
             name: "view-bundles",
             list: "/view-bundles",
             meta: {
-              label: "Bundles",
+              label: "View Bundles",
             },
           },
         ]}>
