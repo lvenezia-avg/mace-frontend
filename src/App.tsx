@@ -21,6 +21,9 @@ import ContentsEditPage from "@/pages/contents/edit";
 import BundlesListPage from "@/pages/bundles/list";
 import BundlesCreatePage from "@/pages/bundles/create";
 import BundlesEditPage from "@/pages/bundles/edit";
+import ClientsListPage from "@/pages/clients/list";
+import ClientsCreatePage from "@/pages/clients/create";
+import ClientsEditPage from "@/pages/clients/edit";
 import LoginPage from "@/pages/login/index";
 
 const App = () => {
@@ -66,6 +69,15 @@ const App = () => {
               label: "Bundles",
             },
           },
+          {
+            name: "clients",
+            list: "/clients",
+            create: "/clients/create",
+            edit: "/clients/edit/:id",
+            meta: {
+              label: "Clients",
+            },
+          },
         ]}>
         <Routes>
           {/* Auth routes — if already authenticated, redirect away */}
@@ -96,6 +108,9 @@ const App = () => {
             <Route path="/bundles" element={<BundlesListPage />} />
             <Route path="/bundles/create" element={<BundlesCreatePage />} />
             <Route path="/bundles/edit/:id" element={<BundlesEditPage />} />
+            <Route path="/clients" element={<ClientsListPage />} />
+            <Route path="/clients/create" element={<ClientsCreatePage />} />
+            <Route path="/clients/edit/:id" element={<ClientsEditPage />} />
             <Route path="*" element={<RefineAiErrorComponent />} />
           </Route>
         </Routes>

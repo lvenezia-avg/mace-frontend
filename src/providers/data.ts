@@ -13,10 +13,25 @@ import { API_URL } from "./constants";
 
 type AnyObject = Record<string, any>;
 
+function getBearerHeader() {
+  let bearerToken = ((globalThis as any).process?.env?.HARDCODED_BEARER as string) || "";
+
+  if (!bearerToken && typeof window !== "undefined") {
+    bearerToken = window.localStorage.getItem("HARDCODED_BEARER") || "";
+  }
+
+  const result = bearerToken ? { Authorization: `Bearer ${bearerToken}` } : {};
+  console.debug("[dataProvider] getBearerHeader", { bearerToken, header: result });
+  return result;
+}
+
 const provider = createDataProvider(API_URL, {
   getList: {
     getEndpoint(params: GetListParams): string {
       return `${params.resource}`;
+    },
+    async buildHeaders() {
+      return getBearerHeader();
     },
     async buildQueryParams(params: GetListParams) {
       const { pagination } = params;
@@ -70,6 +85,9 @@ const provider = createDataProvider(API_URL, {
     getEndpoint(params: GetOneParams): string {
       return `${params.resource}/${params.id}`;
     },
+    async buildHeaders() {
+      return getBearerHeader();
+    },
     async mapResponse(
       response: KyResponse<AnyObject>,
       _params: GetOneParams
@@ -96,6 +114,9 @@ const provider = createDataProvider(API_URL, {
     getEndpoint(params: CreateParams<any>): string {
       return params.resource;
     },
+    async buildHeaders() {
+      return getBearerHeader();
+    },
     async buildBodyParams(params: CreateParams<any>) {
       return params.variables;
     },
@@ -111,6 +132,9 @@ const provider = createDataProvider(API_URL, {
   update: {
     getEndpoint(params: UpdateParams<any>): string {
       return params.resource;
+    },
+    async buildHeaders() {
+      return getBearerHeader();
     },
     async buildBodyParams(params: UpdateParams<any>) {
       return params.variables;
@@ -128,6 +152,9 @@ const provider = createDataProvider(API_URL, {
     getEndpoint(params: DeleteOneParams<any>): string {
       return `${params.resource}/${params.id}`;
     },
+    async buildHeaders() {
+      return getBearerHeader();
+    },
     async mapResponse(
       response: KyResponse<AnyObject>,
       _params: DeleteOneParams<any>
@@ -142,7 +169,10 @@ const provider = createDataProvider(API_URL, {
       return params.query ?? {};
     },
     async buildHeaders(params: CustomParams<any>) {
-      return params.headers ?? {};
+      return {
+        ...getBearerHeader(),
+        ...params.headers,
+      };
     },
     async buildBodyParams(params: CustomParams<any>): Promise<any> {
       if (params.url.includes("disable-entitlement") || params.url.includes("enable-entitlement")) {
