@@ -6,8 +6,10 @@ import { DataTableSorter } from "@/components/refine-ui/data-table/data-table-so
 import { ListView, ListViewHeader } from "@/components/refine-ui/views/list-view";
 import { EditButton } from "@/components/refine-ui/buttons/edit";
 import { Badge } from "@/components/ui/badge";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit, Trash2, Eye } from "lucide-react";
 import { DeleteButton } from "@/components/refine-ui/buttons/delete";
+import { useNavigate, useParams } from "react-router";
+import { Button } from "@/components/ui/button";
 
 type Bundle = {
   bundleId: string;
@@ -18,6 +20,12 @@ type Bundle = {
 };
 
 export default function BundlesListPage() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const goToViewBundle = (id: string) => {
+    navigate(`/view-bundle/${id}`);
+  };
+
   const columns = useMemo<ColumnDef<Bundle>[]>(
     () => [
       {
@@ -81,6 +89,12 @@ export default function BundlesListPage() {
           const recordItemId = row.original.bundleId;
           return (
             <div className="flex gap-1">
+              <Button variant="secondary"
+                size="icon-sm"
+                onClick={() => goToViewBundle(recordItemId)}
+              >
+                <Eye className="h-4 w-4" />
+              </Button>
               <EditButton recordItemId={recordItemId} size="icon-sm" variant="secondary">
                 <Edit className="h-4 w-4" />
               </EditButton>

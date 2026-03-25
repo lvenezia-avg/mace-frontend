@@ -10,6 +10,9 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { useNavigate, useParams } from "react-router";
+import { Copy, Check } from "lucide-react";
+
 
 const formSchema = z.object({
   bundleName: z.string().min(1, "Name is required"),
@@ -27,8 +30,25 @@ type Bundle = {
 };
 
 export default function BundlesEditPage() {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const dataProvider = useDataProvider();
   const [contentsOptions, setContentsOptions] = useState<{ contentId: string; contentName: string }[]>([]);
+  const [copied, setCopied] = useState(false);
+
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(`${window.location.origin}/view-bundle/${id}`);
+      setCopied(true);
+
+      setTimeout(() => {
+        setCopied(false);
+      }, 1500);
+    } catch (err) {
+      console.error("Error al copiar:", err);
+    }
+  };
 
   useEffect(() => {
     dataProvider()
@@ -39,6 +59,10 @@ export default function BundlesEditPage() {
       })
       .catch(() => setContentsOptions([]));
   }, [dataProvider]);
+
+  const goToViewBundle = (id: string) => {
+    navigate(`/view-bundle/${id}`);
+  };
 
   const {
     refineCore: { onFinish, formLoading, query },
@@ -140,6 +164,16 @@ export default function BundlesEditPage() {
             <div className="flex gap-3">
               <Button type="submit" disabled={!!isLoading}>
                 {formLoading ? "Saving..." : "Save Changes"}
+              </Button>
+              <Button type="button" className="bg-gray-100 text-black hover:bg-gray-200 relative pe-9" onClick={() => goToViewBundle(id!)}>
+                {"View Bundle"}
+                <div className="absolute right-2 z-50  h-6 w-6 flex items-center justify-center" onClick={(e) => {
+                  e.stopPropagation();
+                  handleCopy()
+                }
+                }>
+                  {copied ? <Check className="text-green-500" size={18} /> : <Copy size={18} />}
+                </div>
               </Button>
             </div>
           </form>

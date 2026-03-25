@@ -71,13 +71,6 @@ const App = () => {
             edit: "/clients/edit/:id",
             meta: {
               label: "Clients",
-              },
-          },
-          {
-            name: "view-bundles",
-            list: "/view-bundles",
-            meta: {
-              label: "View Bundles",
             },
           },
         ]}>
@@ -98,7 +91,7 @@ const App = () => {
             <Route path="/clients" element={<ClientsListPage />} />
             <Route path="/clients/create" element={<ClientsCreatePage />} />
             <Route path="/clients/edit/:id" element={<ClientsEditPage />} />
-            <Route path="/view-bundles" element={<ViewBundlesPage />} />
+            <Route path="/view-bundle/:id" element={<ViewBundlesPage />} />
             <Route path="*" element={<RefineAiErrorComponent />} />
           </Route>
         </Routes>

@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 
 export function Layout({ children }: PropsWithChildren) {
   const location = useLocation();
-  const isViewBundles = location.pathname === "/view-bundles";
+  const isViewBundles = location.pathname.startsWith("/view-bundle/");
 
   return (
     <ThemeProvider>
