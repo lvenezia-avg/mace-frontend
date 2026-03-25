@@ -1,6 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
+import { useLocation } from "react-router";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { Sidebar } from "@/components/refine-ui/layout/sidebar";
 import { Header } from "@/components/refine-ui/layout/header";
@@ -8,10 +9,13 @@ import { ThemeProvider } from "@/components/refine-ui/theme/theme-provider";
 import { cn } from "@/lib/utils";
 
 export function Layout({ children }: PropsWithChildren) {
+  const location = useLocation();
+  const isViewBundles = location.pathname === "/view-bundles";
+
   return (
     <ThemeProvider>
       <SidebarProvider>
-        <Sidebar />
+        {!isViewBundles && <Sidebar />}
         <SidebarInset>
           <Header />
           <main

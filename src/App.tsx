@@ -1,4 +1,4 @@
-import { Refine, Authenticated } from "@refinedev/core";
+import { Refine } from "@refinedev/core";
 
 import routerProvider, { NavigateToResource, UnsavedChangesNotifier } from "@refinedev/react-router";
 
@@ -13,7 +13,6 @@ import { Toaster } from "@/components/refine-ui/notification/toaster";
 import { Layout } from "@/components/refine-ui/layout/layout";
 
 import { dataProvider } from "@/providers/data";
-import { authProvider } from "@/providers/auth";
 
 import ContentsListPage from "@/pages/contents/list";
 import ContentsCreatePage from "@/pages/contents/create";
@@ -25,6 +24,7 @@ import ClientsListPage from "@/pages/clients/list";
 import ClientsCreatePage from "@/pages/clients/create";
 import ClientsEditPage from "@/pages/clients/edit";
 import LoginPage from "@/pages/login/index";
+import ViewBundlesPage from "./pages/view-bundles/view-bundles";
 
 const App = () => {
   return (
@@ -32,7 +32,6 @@ const App = () => {
       <Refine
         routerProvider={routerProvider}
         dataProvider={dataProvider}
-        authProvider={authProvider}
         notificationProvider={useNotificationProvider}
         options={{
           title: {
@@ -41,11 +40,7 @@ const App = () => {
               <img
                 src="/awg_logo.png"
                 alt="AWG Logo"
-                className="h-16 w-16 object-contain"
-                style={{
-                  transform: "scale(1.6)",
-                  margin: "-8px",
-                }}
+                className="h-12 w-12 object-contain"
               />
             ),
           },
@@ -76,31 +71,23 @@ const App = () => {
             edit: "/clients/edit/:id",
             meta: {
               label: "Clients",
+              },
+          },
+          {
+            name: "view-bundles",
+            list: "/view-bundles",
+            meta: {
+              label: "View Bundles",
             },
           },
         ]}>
         <Routes>
-          {/* Auth routes — if already authenticated, redirect away */}
           <Route
             element={
-              <Authenticated key="auth-pages" fallback={<Outlet />}>
-                <NavigateToResource resource="contents" />
-              </Authenticated>
-            }
-          >
-            <Route path="/login" element={<LoginPage />} />
-          </Route>
-
-          {/* Protected routes — if not authenticated, redirect to /login */}
-          <Route
-            element={
-              <Authenticated key="protected-routes">
-                <Layout>
-                  <Outlet />
-                </Layout>
-              </Authenticated>
-            }
-          >
+              <Layout >
+                <Outlet />
+              </Layout>
+            }>
             <Route index element={<NavigateToResource resource="contents" />} />
             <Route path="/contents" element={<ContentsListPage />} />
             <Route path="/contents/create" element={<ContentsCreatePage />} />
@@ -111,6 +98,7 @@ const App = () => {
             <Route path="/clients" element={<ClientsListPage />} />
             <Route path="/clients/create" element={<ClientsCreatePage />} />
             <Route path="/clients/edit/:id" element={<ClientsEditPage />} />
+            <Route path="/view-bundles" element={<ViewBundlesPage />} />
             <Route path="*" element={<RefineAiErrorComponent />} />
           </Route>
         </Routes>
